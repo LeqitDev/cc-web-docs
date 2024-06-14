@@ -30,5 +30,10 @@
     "typescript-eslint": "^8.0.0-alpha.20",
     "vite": "^5.0.3"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "esbuild": "^0.21.5",
+    "esbuild-svelte": "^0.8.1",
+    "esbuild-wasm": "^0.21.5"
+  }
 }
