@@ -28,7 +28,7 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
                 }
                 return {
                     namespace: 'unpkg',
-                    path: args.path
+                    path: 'https://unpkg.com/' + args.path
                 }
             });
 
@@ -80,7 +80,7 @@ export const load: Load = async ({ params }) => {
 		console.log(mdsvex_obj.code);
 
 		let svelte_obj = compileSvelte(mdsvex_obj.code, { generate: 'dom', hydratable: false });
-        const js_code = svelte_obj.js.code.replace('svelte/internal', 'https://unpkg.com/svelte@4.2.18/src/runtime/internal/index.js').replace('svelte/internal/disclose-version', 'https://unpkg.com/svelte@4.2.18/src/runtime/internal/disclose-version').replace('"svelte"', '"https://unpkg.com/svelte"');
+        const js_code = svelte_obj.js.code.replaceAll('svelte/internal', 'svelte/src/runtime/internal');
 
         const vfs: { [key: string]: string } = {
             'main.js': js_code,
