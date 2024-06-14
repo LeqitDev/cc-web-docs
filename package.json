@@ -32,6 +32,8 @@
   },
   "type": "module",
   "dependencies": {
-    "remark-mdx": "^3.0.1"
+    "esbuild": "^0.21.5",
+    "esbuild-svelte": "^0.8.1",
+    "esbuild-wasm": "^0.21.5"
   }
 }
