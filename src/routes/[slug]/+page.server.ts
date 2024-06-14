@@ -3,6 +3,7 @@ import { compile } from 'mdsvex';
 import { compile as compileSvelte } from 'svelte/compiler';
 import * as esbuild from "esbuild";
 import sveltePlugin from "esbuild-svelte";
+import axios from 'axios';
 
 export const prerender = true;
 export const ssr = false;
@@ -13,14 +14,21 @@ function fromBinary(encoded: string): string {
     }).join(''));
 }
 
+
 const resolverPlugin = (vfs: { [key: string]: string }) => {
     return {
         name: 'unpkg-path-plugin',
         setup(build: any) {
-            const fileCache = new Map();
+            const fileCache = new Map
 
             build.onResolve({ filter: /.*/ }, async (args: any) => {
+                if (args.path === 'main.js') {
+                    return { path: args.path, namespace: 'unpkg' };
+                }
+
                 if (args.path.includes('./') || args.path.includes('../')) {
+                    args.resolveDir = args.resolveDir.replace('C:', '').replaceAll("\\", "/"); // I hate you windows
+                    
                     return {
                         namespace: 'unpkg',
                         path: new URL(args.path, 'https://unpkg.com' + args.resolveDir + '/').href
@@ -28,7 +36,7 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
                 }
                 return {
                     namespace: 'unpkg',
-                    path: 'https://unpkg.com/' + args.path
+                    path: `https://unpkg.com/${args.path}`
                 }
             });
 
@@ -45,13 +53,12 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
                     return cached;
                 }
 
-                const response = await fetch(args.path);
-                const contents = await response.text();
+                const { data, request } = await axios.get(args.path)
 
                 const result = {
                     loader: 'js',
-                    contents,
-                    resolveDir: new URL('./', response.url).pathname,
+                    contents: data,
+                    resolveDir: 'C:' +  new URL('./', request.res.responseUrl).pathname,
                 }
 
                 await fileCache.set(args.path, result);
@@ -77,10 +84,13 @@ export const load: Load = async ({ params }) => {
 	let data = fromBinary(json.content);
 	let mdsvex_obj = await compile(data);
 	if (mdsvex_obj) {
-		console.log(mdsvex_obj.code);
+		// console.log(mdsvex_obj.code);
 
 		let svelte_obj = compileSvelte(mdsvex_obj.code, { generate: 'dom', hydratable: false });
-        const js_code = svelte_obj.js.code.replaceAll('svelte/internal', 'svelte/src/runtime/internal');
+        const js_code = svelte_obj.js.code
+                            .replaceAll('svelte/internal', 'svelte/src/runtime/internal')
+                            .replace('export { metadata };', '')
+                            .replace('export default Component;', "const app = new Component({ target: document.body, props: {metadata: metadata} });");
 
         const vfs: { [key: string]: string } = {
             'main.js': js_code,
@@ -100,8 +110,9 @@ export const load: Load = async ({ params }) => {
             outdir: 'out',
             treeShaking: true,
             // keepNames: true,
-            // minify: true
+            minify: true
         });
+        
 
         const compiled = result.outputFiles[0].text.replace('var input_default = Component;', 'const app = new Component({ target: document.body });');
 
@@ -118,7 +129,6 @@ export const load: Load = async ({ params }) => {
             </body>
             </html>
         `;
-		console.log(html);
 
 		return {
 			url: html,

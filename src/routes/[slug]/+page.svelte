@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-    import * as esbuild from 'esbuild-wasm';
 
 	export let data: PageData;
 
