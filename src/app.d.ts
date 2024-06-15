@@ -7,6 +7,21 @@ declare global {
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+		interface Issue {
+			title: string,
+			body: string,
+			number: number,
+			labels: Label[],
+			created_at: string,
+			updated_at: string,
+			compiled: boolean,
+			frontmatter?: { [key: string]: any } 
+		}
+
+		interface Label {
+			name: string,
+			color: string
+		}
 	}
 }
 
