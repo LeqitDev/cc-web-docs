@@ -1,6 +1,6 @@
 import { compile } from "mdsvex";
 import { writable } from "svelte/store";
-import { compileMDsveX } from "./server/compiler";
+import { compileMDsveXAndSvelte } from "./server/compiler";
 
 export const doc_entries = writable<App.Issue[]>([]);
 
@@ -21,7 +21,7 @@ export async function fetch_doc_entries() {
     let list = (await response.json()) as App.Issue[]; 
 
     list = await Promise.all(list.map(async (entry: App.Issue) => {
-        return compileMDsveX(entry)
+        return compileMDsveXAndSvelte(entry);
     }));
     
     doc_entries.set(list);
