@@ -22,6 +22,7 @@
     "@types/node": "^20.14.2",
     "@types/remark-heading-id": "^1.0.0",
     "autoprefixer": "^10.4.19",
+    "esbuild-style-plugin": "^1.6.3",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.36.0",
@@ -31,6 +32,7 @@
     "prettier": "^3.1.1",
     "prettier-plugin-svelte": "^3.1.2",
     "prettier-plugin-tailwindcss": "^0.6.4",
+    "shiki": "^1.6.4",
     "svelte": "^4.2.7",
     "svelte-check": "^3.6.0",
     "svelte-toc": "^0.5.9",
@@ -42,13 +44,16 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/hast": "^3.0.4",
     "axios": "^1.7.2",
     "buffer": "^6.0.3",
     "date-fns": "^3.6.0",
     "esbuild": "^0.21.5",
     "esbuild-svelte": "^0.8.1",
     "esbuild-wasm": "^0.21.5",
+    "rehype-figure": "^1.0.1",
     "rehype-rewrite": "^4.0.2",
+    "rehype-shiki": "^0.0.9",
     "rehype-stringify": "^10.0.0",
     "remark-heading-id": "^1.0.1"
   }

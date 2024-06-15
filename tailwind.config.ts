@@ -21,10 +21,10 @@ const config = {
 	},
 	plugins: [
 		// 4. Append the Skeleton plugin (after other plugins)
+		require('@tailwindcss/typography'),
 		skeleton({
 			themes: { preset: ["wintry"] }
 		}),
-		require('@tailwindcss/typography')
 	]
 } satisfies Config;
 

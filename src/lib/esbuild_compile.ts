@@ -1,10 +1,7 @@
 import axios from 'axios';
-import { Buffer } from 'buffer';
-if (!window.Buffer) {
-    window.Buffer = Buffer;
-}
 import sveltePlugin from 'esbuild-svelte'; // causes reference error (buffer)
 import * as esbuild from 'esbuild-wasm';
+import template from './html_template.html?raw';
 
 const resolverPlugin = (vfs: { [key: string]: string }) => {
 	return {
@@ -68,6 +65,10 @@ await esbuild.initialize({
     wasmURL: '../../../node_modules/esbuild-wasm/esbuild.wasm',
   });
 
+const htmlTemplate = (code: string) => {
+	return template.replace('<!-- 349857 bundled code -->', '<script type="module">' + code + '</script>');
+};
+
 export const esbuildCompile = async (code: string) => {
   try {
 
@@ -85,7 +86,10 @@ export const esbuildCompile = async (code: string) => {
 		bundle: true,
 		mainFields: ['svelte', 'browser', 'module', 'main'],
 		conditions: ['svelte', 'browser'],
-		plugins: [resolverPlugin(vfs), sveltePlugin()], // TODO: add sveltePlugin
+		plugins: [
+			resolverPlugin(vfs), 
+			sveltePlugin(), 
+		],
 		write: false,
 		outdir: 'out',
 		treeShaking: true,
@@ -95,25 +99,7 @@ export const esbuildCompile = async (code: string) => {
 
 	const compiled = result.outputFiles[0].text;
 
-	const html = `
-            <!DOCTYPE html>
-            <html lang="en" class="dark">
-            <head>
-                <style></style>
-				<style>
-				img {
-		margin: 0 auto;
-	}</style>
-            </head>
-            <body style="background: transparent;" data-theme="wintry">
-                <script type="module">
-                    ${compiled}
-                </script>
-            </body>
-            </html>
-        `; // generate html
-
-    return html;
+    return htmlTemplate(compiled);
   } catch (error) {
     console.error('esbuildCompile error:', error);
     return '';

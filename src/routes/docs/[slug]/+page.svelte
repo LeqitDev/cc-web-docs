@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import { format, formatDistance, formatDistanceStrict } from 'date-fns';
 	import ToC from '../../../components/ToC.svelte';
@@ -27,6 +27,7 @@
 		// iFrame.style.position = 'fixed';
 		iFrameContainer.innerHTML = ''; // (optional) Totally Clear it if needed
 		iFrameContainer.appendChild(iFrame);
+		
 
 		let iFrameDoc = iFrame.contentWindow && iFrame.contentWindow.document;
 		if (!iFrameDoc) {
@@ -43,6 +44,7 @@
 				iFrameDoc.head.appendChild(style.cloneNode(true));
 			});
 		}
+
 		iFrameDoc.close();
 
 		// set height to content height
@@ -91,6 +93,18 @@
 			return formatDistance(jsDate, now, { addSuffix: true });
 		}
 	}
+
+	const messageListener = (event: MessageEvent) => {
+		if (event.data.type === 'iframe-log') {
+			console.log('iframe:', ...event.data.args);
+		}
+	};
+
+	window.addEventListener('message', messageListener);
+
+	onDestroy(() => {
+		window.removeEventListener('message', messageListener);
+	});
 </script>
 
 <div class="min-h-screen max-w-5xl m-auto flex flex-col">
@@ -104,9 +118,9 @@
 				{/if}
 			</p>
 		</div>
-		<hr class="!border-t-2 my-4 !border-secondary-500" />
+		<hr class="!border-t-2 my-4 !border-primary-500" />
 		<div class="flex grow">
-			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-auto grow pl-4 p-2"></div>
+			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-hidden grow pr-6"></div>
 			<div class="w-60 h-min sticky top-4 p-2">
 				<ToC bind:headings={headings} target={iFrame} />
 				<h2 class="h5 font-semibold border-b mt-8 mb-2">Tags</h2>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" class="dark">
+	<head>
+		<style>
+            .rehype-figure {
+                margin: 1rem 0;
+            }
+
+			.rehype-figure img {
+				margin: 0 auto;
+                border-radius: 0.375rem;
+                box-shadow: 0 10px 15px -3px rgb(14 165 233 / 0.3), 0 4px 6px -4px rgb(14 165 233 / 0.3);
+			}
+
+            .rehype-figure figcaption {
+                text-align: center;
+                font-size: 0.8rem;
+                color: #a0aec0;
+            }
+
+            .custom-block {
+                background-color: #2e3440ff;
+            }
+		</style>
+
+        <script>
+            function copyToClipboard(element) {
+                let code = element.children[0].innerHTML
+                navigator.clipboard.writeText(code)
+            }
+        </script>
+		<!-- <script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+				darkMode: 'class',
+				plugins: [
+					function ({ addVariant }) {
+						addVariant('poop', ' .poop &');
+					}
+				]
+			};
+		</script> -->
+	</head>
+	<body style="background: transparent; overflow: hidden" data-theme="wintry">
+        <div id="render-app"></div>
+		<!-- 349857 bundled code -->
+	</body>
+</html>
