@@ -3,9 +3,6 @@ import { compileMDsveXAndSvelte } from '$lib/server/compiler';
 import { get } from 'svelte/store';
 import { doc_entries, fetch_doc_entries } from '$lib/store';
 
-export const prerender = true;
-export const ssr = false;
-
 export const load: Load = async ({ params }) => {
 	try {
 		// add different slugs
