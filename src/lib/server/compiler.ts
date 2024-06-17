@@ -1,4 +1,4 @@
-import { compile } from 'mdsvex';
+import { compile } from 'mdsvex/dist/browser-umd';
 import { compile as compileSvelte } from 'svelte/compiler';
 import rehypeRewrite from "rehype-rewrite";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

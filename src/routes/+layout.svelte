@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import { init } from "$lib/esbuild_compile";
-	import { esbuild_init } from '$lib/store';
+	import { esbuild_init } from '$lib/clientStore';
 
 	onMount(() => {
 		if (!$esbuild_init) {
