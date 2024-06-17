@@ -28,7 +28,7 @@ ENV NODE_ENV=production
 RUN bun test
 RUN bun run build
 
-RUN ls -lR ./
+RUN ls -lR ./ -Inode_modules
 
 # copy production dependencies and source code into final image
 FROM base AS release
