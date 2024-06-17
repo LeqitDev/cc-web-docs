@@ -32,6 +32,8 @@ COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/build .
 COPY --from=prerelease /usr/src/app/package.json .
 
+RUN ls -lr -Inode_modules
+
 # run the app
 USER bun
 EXPOSE 3000/tcp
