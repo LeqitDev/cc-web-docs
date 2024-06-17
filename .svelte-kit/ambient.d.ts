@@ -26,10 +26,10 @@
  * ```
  */
 declare module '$env/static/private' {
+	export const VITE_GITHUB_TOKEN: string;
 	export const ALLUSERSPROFILE: string;
 	export const AMDRMSDKPATH: string;
 	export const APPDATA: string;
-	export const BUN_WHICH_IGNORE_CWD: string;
 	export const CABAL_DIR: string;
 	export const ChocolateyInstall: string;
 	export const ChocolateyLastPathUpdate: string;
@@ -50,7 +50,6 @@ declare module '$env/static/private' {
 	export const GIT_ASKPASS: string;
 	export const HOMEDRIVE: string;
 	export const HOMEPATH: string;
-	export const INIT_CWD: string;
 	export const LANG: string;
 	export const LOCALAPPDATA: string;
 	export const LOGONSERVER: string;
@@ -59,9 +58,11 @@ declare module '$env/static/private' {
 	export const LUA_LIB_NAME: string;
 	export const MAVEN_HOME: string;
 	export const NODE: string;
+	export const NODE_ENV: string;
 	export const npm_config_local_prefix: string;
 	export const npm_config_user_agent: string;
 	export const npm_execpath: string;
+	export const npm_lifecycle_event: string;
 	export const npm_node_execpath: string;
 	export const npm_package_json: string;
 	export const npm_package_name: string;
@@ -100,7 +101,6 @@ declare module '$env/static/private' {
 	export const USERDOMAIN_ROAMINGPROFILE: string;
 	export const USERNAME: string;
 	export const USERPROFILE: string;
-	export const VITE_GITHUB_TOKEN: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const VSCODE_GIT_ASKPASS_MAIN: string;
 	export const VSCODE_GIT_ASKPASS_NODE: string;
@@ -141,10 +141,10 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
+		VITE_GITHUB_TOKEN: string;
 		ALLUSERSPROFILE: string;
 		AMDRMSDKPATH: string;
 		APPDATA: string;
-		BUN_WHICH_IGNORE_CWD: string;
 		CABAL_DIR: string;
 		ChocolateyInstall: string;
 		ChocolateyLastPathUpdate: string;
@@ -165,7 +165,6 @@ declare module '$env/dynamic/private' {
 		GIT_ASKPASS: string;
 		HOMEDRIVE: string;
 		HOMEPATH: string;
-		INIT_CWD: string;
 		LANG: string;
 		LOCALAPPDATA: string;
 		LOGONSERVER: string;
@@ -174,9 +173,11 @@ declare module '$env/dynamic/private' {
 		LUA_LIB_NAME: string;
 		MAVEN_HOME: string;
 		NODE: string;
+		NODE_ENV: string;
 		npm_config_local_prefix: string;
 		npm_config_user_agent: string;
 		npm_execpath: string;
+		npm_lifecycle_event: string;
 		npm_node_execpath: string;
 		npm_package_json: string;
 		npm_package_name: string;
@@ -215,7 +216,6 @@ declare module '$env/dynamic/private' {
 		USERDOMAIN_ROAMINGPROFILE: string;
 		USERNAME: string;
 		USERPROFILE: string;
-		VITE_GITHUB_TOKEN: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		VSCODE_GIT_ASKPASS_MAIN: string;
 		VSCODE_GIT_ASKPASS_NODE: string;

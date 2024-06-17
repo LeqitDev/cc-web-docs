@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { format, formatDistance, formatDistanceStrict } from 'date-fns';
-	import ToC from '../../../components/ToC.svelte';
+	import { format, formatDistance } from 'date-fns';
+	import ToC from '$lib/components/ToC.svelte';
 	import { esbuildCompile } from '$lib/esbuild_compile';
 
 	export let data: PageData;
@@ -14,7 +14,7 @@
 
 	onMount(async () => {
 		if (data.entry) {
-			createIFrame(await esbuildCompile(data.entry.body));
+			// createIFrame(await esbuildCompile(data.entry.body));
 			tags = data.entry.frontmatter?.tags.split(',') ?? [];
 		}
 	});

@@ -105,7 +105,7 @@ export async function compileMDsveX(issue: App.Issue) {
 
 	if (mdsvex_obj) {
 		issue.body = mdsvex_obj.code;
-		issue.frontmatter = mdsvex_obj.data?.fm as { [key: string]: any };
+		issue.frontmatter = mdsvex_obj.data?.fm as { [key: string]: string };
 	}
 
 	return issue;
