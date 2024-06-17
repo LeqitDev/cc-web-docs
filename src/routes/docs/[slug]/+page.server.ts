@@ -1,7 +1,7 @@
 import type { Load } from '@sveltejs/kit';
 import { compileMDsveXAndSvelte } from '$lib/server/compiler';
 import { get } from 'svelte/store';
-import { doc_entries } from '$lib/store';
+import { doc_entries, fetch_doc_entries } from '$lib/store';
 
 export const prerender = true;
 export const ssr = false;
@@ -9,12 +9,32 @@ export const ssr = false;
 export const load: Load = async ({ params }) => {
 	try {
 		// add different slugs
-        let entry = get(doc_entries).find((entry) => entry.number === Number(params.slug));
+		const slug = Number(params.slug);
+		let entry;
+		if (isNaN(slug)) {
+			entry = get(doc_entries).find((entry) => entry.frontmatter?.slug === params.slug);
+
+			if (!entry) {
+				await fetch_doc_entries();
+				entry = get(doc_entries).find((entry) => entry.frontmatter?.slug === params.slug);
+
+				if (!entry) {
+					return {
+						entry: null,
+					};
+				}
+			}
+		} else {
+			entry = get(doc_entries).find((entry) => entry.number === slug);
+		}
+
         if (entry) {
             return {
 				entry: entry,
 			};
         }
+
+
         let startTime = Date.now();
 		let response = await fetch(
 			'https://api.github.com/repos/LeqitDev/cc-web-docs/issues/' + params.slug,

@@ -57,7 +57,7 @@
 			if (queryHeadings) {
 				queryHeadings.forEach((heading) => {
 					const id = heading.id;
-					const text = heading.innerHTML;
+					const text = (new DOMParser()).parseFromString(heading.innerHTML, 'text/html').body.textContent ?? "";
 					const level = parseInt(heading.tagName[1]);
 					headings = [...headings, { id, text, level, element: heading}];
 				});
@@ -69,7 +69,12 @@
 				const hash = window.location.hash.slice(1);
 				const target = iFrame.contentWindow?.document.getElementById(hash);
 				if (target) {
-					setTimeout(() => {target.scrollIntoView({ behavior: 'smooth' })}, 500);
+					const elementPosition = target.getBoundingClientRect().top;
+					const offsetPosition = elementPosition - window.innerHeight * 0.2;
+					window.scrollTo({
+						top: offsetPosition,
+						behavior: 'smooth'
+					});
 				}
 			}
 		};
@@ -106,21 +111,15 @@
 		window.removeEventListener('message', messageListener);
 	});
 </script>
-
+<svelte:head>
+	{#if data.entry && data.entry.frontmatter}
+		<title>{data.entry.frontmatter.title ?? "Docs | cc-web"}</title>
+	{/if}
+</svelte:head>
 <div class="min-h-screen max-w-5xl m-auto flex flex-col">
 	{#if data.entry}
-		<h1 class="h1 font-bold">{data.entry.title}</h1>
-		<div>
-			<p class="date text-sm text-surface-400 font-semibold">
-				Published {parseDate(data.entry.created_at)},
-				{#if data.entry.updated_at !== data.entry.created_at}
-					updated {parseDate(data.entry.updated_at, true)}.
-				{/if}
-			</p>
-		</div>
-		<hr class="!border-t-2 my-4 !border-primary-500" />
 		<div class="flex grow">
-			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-hidden grow pr-6"></div>
+			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-hidden grow pr-6 pb-20"></div>
 			<div class="w-60 h-min sticky top-4 p-2">
 				<ToC bind:headings={headings} target={iFrame} />
 				<h2 class="h5 font-semibold border-b mt-8 mb-2">Tags</h2>

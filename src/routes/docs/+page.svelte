@@ -9,7 +9,7 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 {#if data.entries}
     {#each data.entries as item}
-        <a href={"/docs/" + item.number}>{item.title}</a> {item.created_at} {item.updated_at} {item.frontmatter?.title}<br>
+        <a href={"/docs/" + item.frontmatter?.slug ?? item.number}>{item.title}</a> {item.created_at} {item.updated_at} {item.frontmatter?.title}<br>
     {:else}
         <p>No entries found</p>
     {/each}
