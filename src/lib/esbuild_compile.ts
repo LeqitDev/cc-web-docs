@@ -1,5 +1,5 @@
 import axios from 'axios';
-import sveltePlugin from 'esbuild-svelte'; // causes reference error (buffer)
+//import sveltePlugin from 'esbuild-svelte'; // causes reference error (buffer) change the module at line 36
 import * as esbuild from 'esbuild-wasm';
 import template from './html_template.html?raw';
 
@@ -65,7 +65,7 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
 				const result = {
 					loader: 'js',
 					contents: response.data,
-					resolveDir: 'C:' + new URL('./', response.request.responseURL).pathname // i hate you windows (TODO: check if its valid on mac/linux)
+					resolveDir: 'C:' +  new URL('./', response.request.responseURL).pathname // i hate you windows (TODO: check if its valid on mac/linux)
 				};
 
 				await fileCache.set(args.path, result);
@@ -104,7 +104,7 @@ export const esbuildCompile = async (code: string) => {
 		conditions: ['svelte', 'browser'],
 		plugins: [
 			resolverPlugin(vfs), 
-			sveltePlugin(), 
+			//sveltePlugin(), 
 		],
 		write: false,
 		outdir: 'out',
