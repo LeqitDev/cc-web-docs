@@ -76,10 +76,12 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
 	};
 };
 
-await esbuild.initialize({
-    worker: false,
-    wasmURL: '../../../node_modules/esbuild-wasm/esbuild.wasm',
-  });
+export async function init() {
+	await esbuild.initialize({
+		worker: false,
+		wasmURL: '../../../node_modules/esbuild-wasm/esbuild.wasm',
+	  });
+}
 
 const htmlTemplate = (code: string) => {
 	return template.replace('<!-- 349857 bundled code -->', '<script type="module">' + code + '</script>');

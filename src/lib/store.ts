@@ -2,6 +2,7 @@ import { compile } from "mdsvex";
 import { writable } from "svelte/store";
 import { compileMDsveXAndSvelte } from "./server/compiler";
 
+export const esbuild_init = writable(false);
 export const doc_entries = writable<App.Issue[]>([]);
 
 export async function fetch_doc_entries() {
