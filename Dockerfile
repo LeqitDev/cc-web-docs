@@ -1,42 +1,43 @@
-# use the official Bun image
-# see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 as base
+#Dockerfile
+
+# Use this image as the platform to build the app
+FROM node:18-alpine AS builder
+
+# A small line inside the image to show who made it
+LABEL Developers="Markus Hamacher"
+
+# The WORKDIR instruction sets the working directory for everything that will happen next
 WORKDIR /usr/src/app
 
-# install dependencies into temp directory
-# this will cache them and speed up future builds
-FROM base AS install
-RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
-
-# install with --production (exclude devDependencies)
-RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
-
-RUN ls -lR /usr/src/app
-
-# copy node_modules from temp directory
-# then copy all (non-ignored) project files into the image
-FROM base AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
+# Copy all local files into the image
 COPY . .
 
-# [optional] tests & build
-ENV NODE_ENV=production
-#RUN bun test
-RUN bun run build
+# Clean install all node modules
+RUN npm ci
 
-RUN ls -lR /usr/src/app -Inode_modules
+# remove potential security issues
+RUN npm audit fix
 
-# copy production dependencies and source code into final image
-FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/index.ts .
-COPY --from=prerelease /usr/src/app/package.json .
+# Build SvelteKit app
+RUN npm run build
 
-# run the app
-USER bun
-EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "index.ts" ]
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY --from=builder /usr/src/app/package*.json ./
+
+RUN npm ci --omit dev
+
+# remove potential security issues
+RUN npm audit fix
+
+# The USER instruction sets the user name to use as the default user for the remainder of the current stage
+USER node:node
+
+COPY --from=builder /usr/src/app/build ./build/
+
+EXPOSE 3000
+
+# This is the command that will be run inside the image when you tell Docker to start the container
+CMD ["node","build/index.js"]
