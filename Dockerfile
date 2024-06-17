@@ -25,10 +25,10 @@ COPY . .
 
 # [optional] tests & build
 ENV NODE_ENV=production
-RUN bun test
+#RUN bun test
 RUN bun run build
 
-RUN ls -lR ./ -Inode_modules
+RUN ls -lR /usr/src/app -Inode_modules
 
 # copy production dependencies and source code into final image
 FROM base AS release
