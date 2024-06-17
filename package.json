@@ -47,18 +47,13 @@
     "@hbsnow/rehype-sectionize": "^1.0.7",
     "@types/hast": "^3.0.4",
     "axios": "^1.7.2",
-    "buffer": "^6.0.3",
     "date-fns": "^3.6.0",
     "esbuild": "^0.21.5",
     "esbuild-svelte": "^0.8.1",
     "esbuild-wasm": "^0.21.5",
     "rehype-figure": "^1.0.1",
     "rehype-rewrite": "^4.0.2",
-    "rehype-shiki": "^0.0.9",
     "rehype-slug-custom-id": "^1.1.0",
-    "rehype-stringify": "^10.0.0",
-    "remark-breaks": "^4.0.0",
-    "remark-heading-id": "^1.0.1",
-    "remark-sectionize": "^2.0.0"
+    "remark-breaks": "^4.0.0"
   }
 }
