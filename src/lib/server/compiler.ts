@@ -1,3 +1,6 @@
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { compile } from 'mdsvex/dist/browser-umd';
 import { compile as compileSvelte } from 'svelte/compiler';
 import rehypeRewrite from "rehype-rewrite";

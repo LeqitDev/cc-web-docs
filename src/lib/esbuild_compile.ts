@@ -2,6 +2,9 @@ import axios from 'axios';
 //import sveltePlugin from 'esbuild-svelte'; // causes reference error (buffer) change the module at line 36
 import * as esbuild from 'esbuild-wasm';
 import template from './html_template.html?raw';
+import { esbuild_init } from './clientStore';
+import { get } from 'svelte/store';
+import wasm from 'esbuild-wasm/esbuild.wasm?url';
 
 function resolvePath(base: string, relative: string): string {
 	let stack = base.split("/"),
@@ -77,10 +80,14 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
 };
 
 export async function init() {
-	await esbuild.initialize({
-		worker: false,
-		wasmURL: '../../../node_modules/esbuild-wasm/esbuild.wasm',
-	  });
+	try {
+		await esbuild.initialize({
+			worker: false,
+			wasmURL: wasm,
+		  });
+	} catch (e) {
+		console.log('esbuild init error:', e);
+	}
 }
 
 const htmlTemplate = (code: string) => {
@@ -88,6 +95,7 @@ const htmlTemplate = (code: string) => {
 };
 
 export const esbuildCompile = async (code: string) => {
+		await init();
   try {
 
     const vfs: { [key: string]: string } = {

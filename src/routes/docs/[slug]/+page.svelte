@@ -39,7 +39,7 @@
 		// copy head styles
 		let head = document.querySelector('head');
 		if (head) {
-			let styles = head.querySelectorAll('style');
+			let styles = [...head.querySelectorAll('style'), ...head.querySelectorAll('link[rel="stylesheet"]')];
 			styles.forEach((style) => {
 				iFrameDoc.head.appendChild(style.cloneNode(true));
 			});
@@ -98,18 +98,6 @@
 			return formatDistance(jsDate, now, { addSuffix: true });
 		}
 	}
-
-	const messageListener = (event: MessageEvent) => {
-		if (event.data.type === 'iframe-log') {
-			console.log('iframe:', ...event.data.args);
-		}
-	};
-
-	window.addEventListener('message', messageListener);
-
-	onDestroy(() => {
-		window.removeEventListener('message', messageListener);
-	});
 </script>
 <svelte:head>
 	{#if data.entry && data.entry.frontmatter}
