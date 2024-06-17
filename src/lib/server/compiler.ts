@@ -22,7 +22,7 @@ function addClass(node: Element, className: string) {
 }
 
 export async function compileMDsveX(issue: App.Issue) {
-	let mdsvex_obj = await compile(issue.body, {
+	const mdsvex_obj = await compile(issue.body, {
 		remarkPlugins: [
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -68,7 +68,7 @@ export async function compileMDsveX(issue: App.Issue) {
 			highlighter: async (code: string, lang: string | undefined | null ) => {
 				if (!lang) return `<pre><code>${code}</code></pre>`;
 
-				let options: { [key: string]: string } = {
+				const options: { [key: string]: string } = {
 					header: "true",
 				};
 
