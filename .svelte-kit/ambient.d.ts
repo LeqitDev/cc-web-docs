@@ -26,7 +26,6 @@
  * ```
  */
 declare module '$env/static/private' {
-	export const VITE_GITHUB_TOKEN: string;
 	export const ALLUSERSPROFILE: string;
 	export const AMDRMSDKPATH: string;
 	export const APPDATA: string;
@@ -35,6 +34,7 @@ declare module '$env/static/private' {
 	export const ChocolateyLastPathUpdate: string;
 	export const ChocolateyToolsLocation: string;
 	export const CHROME_CRASHPAD_PIPE_NAME: string;
+	export const COLOR: string;
 	export const COLORTERM: string;
 	export const CommonProgramFiles: string;
 	export const CommonProgramW6432: string;
@@ -43,13 +43,16 @@ declare module '$env/static/private' {
 	export const CPAL_ASIO_DIR: string;
 	export const DriverData: string;
 	export const DXSDK_DIR: string;
+	export const EDITOR: string;
 	export const EFC_31800: string;
 	export const FPS_BROWSER_APP_PROFILE_STRING: string;
 	export const FPS_BROWSER_USER_PROFILE_STRING: string;
 	export const GHCUP_INSTALL_BASE_PREFIX: string;
 	export const GIT_ASKPASS: string;
+	export const HOME: string;
 	export const HOMEDRIVE: string;
 	export const HOMEPATH: string;
+	export const INIT_CWD: string;
 	export const LANG: string;
 	export const LOCALAPPDATA: string;
 	export const LOGONSERVER: string;
@@ -58,15 +61,36 @@ declare module '$env/static/private' {
 	export const LUA_LIB_NAME: string;
 	export const MAVEN_HOME: string;
 	export const NODE: string;
-	export const NODE_ENV: string;
+	export const NODE_EXE: string;
+	export const NPM_CLI_JS: string;
+	export const npm_command: string;
+	export const npm_config_cache: string;
+	export const npm_config_engine_strict: string;
+	export const npm_config_globalconfig: string;
+	export const npm_config_global_prefix: string;
+	export const npm_config_init_module: string;
 	export const npm_config_local_prefix: string;
+	export const npm_config_node_gyp: string;
+	export const npm_config_noproxy: string;
+	export const npm_config_npm_version: string;
+	export const npm_config_prefix: string;
+	export const npm_config_userconfig: string;
 	export const npm_config_user_agent: string;
 	export const npm_execpath: string;
 	export const npm_lifecycle_event: string;
+	export const npm_lifecycle_script: string;
 	export const npm_node_execpath: string;
+	export const npm_package_dev: string;
+	export const npm_package_dev_optional: string;
+	export const npm_package_engines_node: string;
+	export const npm_package_integrity: string;
 	export const npm_package_json: string;
 	export const npm_package_name: string;
+	export const npm_package_optional: string;
+	export const npm_package_peer: string;
+	export const npm_package_resolved: string;
 	export const npm_package_version: string;
+	export const NPM_PREFIX_NPM_CLI_JS: string;
 	export const NUMBER_OF_PROCESSORS: string;
 	export const OANOCACHE: string;
 	export const OneDrive: string;
@@ -86,6 +110,7 @@ declare module '$env/static/private' {
 	export const ProgramData: string;
 	export const ProgramFiles: string;
 	export const ProgramW6432: string;
+	export const PROMPT: string;
 	export const PSModulePath: string;
 	export const PUBLIC: string;
 	export const RUST_BACKTRACE: string;
@@ -141,7 +166,6 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
-		VITE_GITHUB_TOKEN: string;
 		ALLUSERSPROFILE: string;
 		AMDRMSDKPATH: string;
 		APPDATA: string;
@@ -150,6 +174,7 @@ declare module '$env/dynamic/private' {
 		ChocolateyLastPathUpdate: string;
 		ChocolateyToolsLocation: string;
 		CHROME_CRASHPAD_PIPE_NAME: string;
+		COLOR: string;
 		COLORTERM: string;
 		CommonProgramFiles: string;
 		CommonProgramW6432: string;
@@ -158,13 +183,16 @@ declare module '$env/dynamic/private' {
 		CPAL_ASIO_DIR: string;
 		DriverData: string;
 		DXSDK_DIR: string;
+		EDITOR: string;
 		EFC_31800: string;
 		FPS_BROWSER_APP_PROFILE_STRING: string;
 		FPS_BROWSER_USER_PROFILE_STRING: string;
 		GHCUP_INSTALL_BASE_PREFIX: string;
 		GIT_ASKPASS: string;
+		HOME: string;
 		HOMEDRIVE: string;
 		HOMEPATH: string;
+		INIT_CWD: string;
 		LANG: string;
 		LOCALAPPDATA: string;
 		LOGONSERVER: string;
@@ -173,15 +201,36 @@ declare module '$env/dynamic/private' {
 		LUA_LIB_NAME: string;
 		MAVEN_HOME: string;
 		NODE: string;
-		NODE_ENV: string;
+		NODE_EXE: string;
+		NPM_CLI_JS: string;
+		npm_command: string;
+		npm_config_cache: string;
+		npm_config_engine_strict: string;
+		npm_config_globalconfig: string;
+		npm_config_global_prefix: string;
+		npm_config_init_module: string;
 		npm_config_local_prefix: string;
+		npm_config_node_gyp: string;
+		npm_config_noproxy: string;
+		npm_config_npm_version: string;
+		npm_config_prefix: string;
+		npm_config_userconfig: string;
 		npm_config_user_agent: string;
 		npm_execpath: string;
 		npm_lifecycle_event: string;
+		npm_lifecycle_script: string;
 		npm_node_execpath: string;
+		npm_package_dev: string;
+		npm_package_dev_optional: string;
+		npm_package_engines_node: string;
+		npm_package_integrity: string;
 		npm_package_json: string;
 		npm_package_name: string;
+		npm_package_optional: string;
+		npm_package_peer: string;
+		npm_package_resolved: string;
 		npm_package_version: string;
+		NPM_PREFIX_NPM_CLI_JS: string;
 		NUMBER_OF_PROCESSORS: string;
 		OANOCACHE: string;
 		OneDrive: string;
@@ -201,6 +250,7 @@ declare module '$env/dynamic/private' {
 		ProgramData: string;
 		ProgramFiles: string;
 		ProgramW6432: string;
+		PROMPT: string;
 		PSModulePath: string;
 		PUBLIC: string;
 		RUST_BACKTRACE: string;

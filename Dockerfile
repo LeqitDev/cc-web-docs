@@ -1,7 +1,7 @@
 #Dockerfile
 
 # Use this image as the platform to build the app
-FROM node:18-alpine AS builder
+FROM node:21-alpine AS builder
 
 # A small line inside the image to show who made it
 LABEL Developers="Markus Hamacher"
