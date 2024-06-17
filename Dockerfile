@@ -28,11 +28,11 @@ RUN bun run build
 
 # copy production dependencies and source code into final image
 FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=install /temp/dev/node_modules node_modules
 COPY --from=prerelease /usr/src/app/build build
 COPY --from=prerelease /usr/src/app/package.json .
 
-RUN ls -lr -Inode_modules
+RUN ls -lR -Inode_modules
 
 # run the app
 USER bun
