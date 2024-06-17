@@ -1,12 +1,11 @@
-FROM node:21.6.2-alpine
+FROM oven/bun
 
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+COPY package.json package.json
+RUN bun install
 
 COPY . .
-RUN npm run build
-
-CMD ["node", "build"]
+RUN bun run build
 
 EXPOSE 3000
+ENTRYPOINT ["bun", "./build"]
