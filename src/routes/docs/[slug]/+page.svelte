@@ -86,6 +86,8 @@
 					});
 				}
 			}
+			
+			iFrame.height = iFrame.contentWindow?.document.body.scrollHeight + 'px';
 		};
 	}
 
