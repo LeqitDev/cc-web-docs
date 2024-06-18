@@ -85,7 +85,7 @@
 					if (node.id === highest.heading.id) {
 						let current = node;
 						while (current.parent) {
-							console.log(current.id);
+							// console.log(current.id);
 							
 							ids = [current.parent.id, ...ids];
 							current = current.parent;
@@ -103,7 +103,7 @@
 	afterUpdate(() => {
 		if (!loaded && headings.length > 0) {
 			buildTree();
-			console.log(tree);
+			// console.log(tree);
 
 			rankedHeadings = [{ heading: headings[0], top: 0, height: 0 }];
 			

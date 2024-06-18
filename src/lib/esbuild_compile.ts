@@ -3,8 +3,9 @@ import axios from 'axios';
 import * as esbuild from 'esbuild-wasm';
 import template from '$lib/html_template.html?raw';
 import wasm from 'esbuild-wasm/esbuild.wasm?url';
-import Admonition from '$lib/components/Admonition.svelte?raw';
-import { compile } from 'svelte/compiler';
+// import Admonition from '$lib/components/Admonition.svelte?raw';
+
+const externals = ['svelte/internal', 'svelte/internal/disclose-version'];
 
 const resolverPlugin = (vfs: { [key: string]: string }) => {
 	return {
@@ -13,6 +14,10 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
 			const fileCache = new Map
 
 			build.onResolve({ filter: /.*/ }, async (args: any) => {
+				if (externals.includes(args.path)) {
+					return { path: `https://unpkg.com/${args.path.replace('svelte/internal', 'svelte/src/runtime/internal')}`, namespace: 'unpkg' };
+				}
+
 				if (args.path === 'main.js') {
 					return { path: args.path, namespace: 'unpkg' };
 				}
@@ -93,13 +98,7 @@ export const esbuildCompile = async (code: string) => {
 		'main.js': code,
 	}; // virtual file system for esbuild
 
-	console.log(Admonition);
-	
-	const svelte_obj = compile(Admonition); // compile svelte
-	const admonition = svelte_obj.js.code
-		.replaceAll('svelte/internal', 'svelte/src/runtime/internal'); // change some things to make it work
-
-	vfs['Admonition.svelte'] = admonition;
+	// vfs['Admonition.svelte'] = admonition.default;
 
     // console.log(code);
 	const result = await esbuild.build({
@@ -111,6 +110,7 @@ export const esbuildCompile = async (code: string) => {
 		bundle: true,
 		mainFields: ['svelte', 'browser', 'module', 'main'],
 		conditions: ['svelte', 'browser'],
+		external: ['@svelte/internal', 'svelte/internal', 'svelte'],
 		plugins: [
 			resolverPlugin(vfs), 
 			//sveltePlugin(), 

@@ -37,16 +37,16 @@ export async function compileMDsveX(issue: App.Issue) {
 				rewrite: (node: Element) => {
 					switch (node.tagName) {
 						case "h2":
-							addClass(node, "h2 font-semibold border-b mb-4 pb-2");
+							addClass(node, "h3 font-semibold border-b mb-4 pb-2");
 							break;
 						case "h3":
-							addClass(node, "h3 font-semibold mt-6 mb-2");
+							addClass(node, "h4 font-semibold mt-6 mb-2");
 							break;
 						case "h4":
-							addClass(node, "h4 font-semibold mt-4 mb-2");
+							addClass(node, "h5 font-semibold mt-4 mb-2");
 							break;
 						case "h5":
-							addClass(node, "h5 font-semibold mt-4 mb-2");
+							addClass(node, "h6 font-semibold mt-4 mb-2");
 							break;
 						case "h6":
 							addClass(node, "h6 font-semibold mt-4 mb-2");
@@ -116,7 +116,7 @@ export async function compileMDsveXAndSvelte(issue: App.Issue) {
 
 	const svelte_obj = compileSvelte(issue.body, { generate: 'dom', hydratable: false }); // compile svelte
 	issue.body = svelte_obj.js.code
-		.replaceAll('svelte/internal', 'svelte/src/runtime/internal')
+		// .replaceAll('svelte/internal', 'svelte/src/runtime/internal')
 		.replace('export { metadata };', '')
 		.replace(
 			'export default Component;',

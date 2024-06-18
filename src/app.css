@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	/* Reference name */
+	font-family: 'Allura';
+	/* For multiple files use commas, ex: url(), url(), ... */
+	src: url('/fonts/Allura-Regular.ttf');
+}
+
+@font-face {
+	/* Reference name */
+	font-family: 'Caveat';
+	/* For multiple files use commas, ex: url(), url(), ... */
+	src: url('/fonts/Caveat-VariableFont_wght.ttf');
+}

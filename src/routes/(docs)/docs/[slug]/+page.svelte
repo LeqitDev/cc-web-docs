@@ -86,7 +86,7 @@
 					});
 				}
 			}
-			
+
 			iFrame.height = iFrame.contentWindow?.document.body.scrollHeight + 'px';
 		};
 	}
@@ -115,11 +115,11 @@
 		<title>{data.entry.frontmatter.title ?? "Docs | cc-web"}</title>
 	{/if}
 </svelte:head>
-<div class="min-h-screen max-w-5xl m-auto flex flex-col">
+<div class="min-h-screen w-full lg:w-10/12 xl:w-7/12 m-auto flex flex-col">
 	{#if data.entry}
 		<div class="flex grow">
-			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-hidden grow pr-6 pb-20"></div>
-			<div class="w-60 h-min sticky top-4 p-2">
+			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-hidden grow px-2 lg:p-0 md:pr-6 pb-20"></div>
+			<div class="w-64 h-min sticky top-4 p-2 md:block hidden">
 				<ToC title={data.entry.title} bind:headings={headings} target={iFrame} />
 				<h2 class="h5 font-semibold border-b mt-8 mb-2">Tags</h2>
 				<div class="flex">
