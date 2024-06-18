@@ -1,9 +1,0 @@
-{
-	"/": [],
-	"/docs": [
-		"src/routes/docs/+page.server.ts"
-	],
-	"/docs/[slug]": [
-		"src/routes/docs/[slug]/+page.server.ts"
-	]
-}
