@@ -37,7 +37,7 @@ export async function compileMDsveX(issue: App.Issue) {
 				rewrite: (node: Element) => {
 					switch (node.tagName) {
 						case "h2":
-							addClass(node, "h2 font-semibold border-b first:pt-2 pt-8 mb-4 pb-2");
+							addClass(node, "h2 font-semibold border-b mb-4 pb-2");
 							break;
 						case "h3":
 							addClass(node, "h3 font-semibold mt-6 mb-2");

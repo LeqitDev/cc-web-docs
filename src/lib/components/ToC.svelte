@@ -7,6 +7,7 @@
 
 	export let headings: Heading[];
 	export let target: HTMLIFrameElement;
+	export let title = 'Table of Contents';
 	let loaded = false;
 	$: tree = [] as HeadingTree[];
 
@@ -100,9 +101,11 @@
 	}
 
 	afterUpdate(() => {
-		if (!loaded) {
+		if (!loaded && headings.length > 0) {
 			buildTree();
 			console.log(tree);
+
+			rankedHeadings = [{ heading: headings[0], top: 0, height: 0 }];
 			
 			loaded = true;
 		}
@@ -130,7 +133,7 @@
 		const el = target.contentWindow?.document.getElementById(id);
 		if (el) {
 			const elementPosition = el.getBoundingClientRect().top;
-			const offsetPosition = elementPosition - window.innerHeight * 0.2;
+			const offsetPosition = elementPosition - window.innerHeight * 0.05;
 			window.scrollTo({
 				top: offsetPosition,
 				behavior: 'smooth'
@@ -152,7 +155,14 @@
 		<p>{r}</p>
 	{/each}
 </div> -->
-<h2 class="h4 font-semibold border-b mb-2">Table of Contents</h2>
+<div>
+	<div class="flex gap-2">
+		<a href="/" class="btn btn-sm rounded-md hover:variant-ghost-primary">Home</a>
+		<a href="/docs" class="btn btn-sm rounded-md hover:variant-ghost-primary">Docs</a>
+		<a href="/blog" class="btn btn-sm rounded-md hover:variant-ghost-primary">Blog</a>
+	</div>
+	<h2 class="h3 font-bold border-b mb-2 mt-4">{title}</h2>
+</div>
 {#each headings as { id, text, level }}
 	<button
 		class={`w-full text-start hover:text-gray-200 ml-1 my-0.5${rankedHeadings[0]?.heading.id === id ? ' font-semibold' : ' text-gray-400'}`}
