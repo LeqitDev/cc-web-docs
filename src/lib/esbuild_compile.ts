@@ -3,32 +3,25 @@ import axios from 'axios';
 import * as esbuild from 'esbuild-wasm';
 import template from '$lib/html_template.html?raw';
 import wasm from 'esbuild-wasm/esbuild.wasm?url';
-
-function resolvePath(base: string, relative: string): string {
-	let stack = base.split("/"),
-		parts = relative.split("/");
-	stack.pop(); // Remove current file name (or empty string)
-				 // (omit if "base" is the directory without a trailing slash)
-	for (let i = 0; i < parts.length; i++) {
-	  if (parts[i] == ".")
-		continue;
-	  if (parts[i] == "..")
-		stack.pop();
-	  else
-		stack.push(parts[i]);
-	}
-	return stack.join("/");
-  }
+import Admonition from '$lib/components/Admonition.svelte?raw';
+import { compile } from 'svelte/compiler';
 
 const resolverPlugin = (vfs: { [key: string]: string }) => {
 	return {
 		name: 'unpkg-path-plugin',
 		setup(build: any) {
-			const fileCache = new Map();
+			const fileCache = new Map
 
 			build.onResolve({ filter: /.*/ }, async (args: any) => {
 				if (args.path === 'main.js') {
 					return { path: args.path, namespace: 'unpkg' };
+				}
+
+				if (args.path.startsWith('./') && vfs[args.path.substring(2)]) {
+					return {
+						namespace: 'unpkg',
+						path: args.path.substring(2)
+					}
 				}
 
 				if (args.path.includes('./') || args.path.includes('../')) {
@@ -99,6 +92,14 @@ export const esbuildCompile = async (code: string) => {
     const vfs: { [key: string]: string } = {
 		'main.js': code,
 	}; // virtual file system for esbuild
+
+	console.log(Admonition);
+	
+	const svelte_obj = compile(Admonition); // compile svelte
+	const admonition = svelte_obj.js.code
+		.replaceAll('svelte/internal', 'svelte/src/runtime/internal'); // change some things to make it work
+
+	vfs['Admonition.svelte'] = admonition;
 
     // console.log(code);
 	const result = await esbuild.build({

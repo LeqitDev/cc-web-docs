@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { format, formatDistance, formatDistanceStrict } from 'date-fns';
-	import ToC from '../../../components/ToC.svelte';
+	import { format, formatDistance } from 'date-fns';
+	import ToC from '$lib/components/ToC.svelte';
 	import { esbuildCompile } from '$lib/esbuild_compile';
 
 	export let data: PageData;
@@ -65,12 +65,21 @@
 				
 			}
 
+			// fix heading spacings
+			const queryHeadingSections = iFrame.contentWindow?.document.querySelectorAll('section[data-heading-rank="2"]');
+
+			if (queryHeadingSections) {
+				queryHeadingSections.forEach((section) => {
+					section.classList.add("first:pt-2", "pt-8");
+				});
+			}
+
 			if (window.location.hash) {
 				const hash = window.location.hash.slice(1);
 				const target = iFrame.contentWindow?.document.getElementById(hash);
 				if (target) {
 					const elementPosition = target.getBoundingClientRect().top;
-					const offsetPosition = elementPosition - window.innerHeight * 0.2;
+					const offsetPosition = elementPosition - window.innerHeight * 0.05;
 					window.scrollTo({
 						top: offsetPosition,
 						behavior: 'smooth'
@@ -109,11 +118,11 @@
 		<div class="flex grow">
 			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-hidden grow pr-6 pb-20"></div>
 			<div class="w-60 h-min sticky top-4 p-2">
-				<ToC bind:headings={headings} target={iFrame} />
+				<ToC title={data.entry.title} bind:headings={headings} target={iFrame} />
 				<h2 class="h5 font-semibold border-b mt-8 mb-2">Tags</h2>
 				<div class="flex">
 					{#each tags as tag}
-						<span class="badge variant-filled-tertiary mr-2">{tag}</span>
+						<a href={`/docs?tag=${tag}`} class="badge variant-filled-tertiary mr-2">{tag}</a>
 					{/each}
 				</div>
 			</div>

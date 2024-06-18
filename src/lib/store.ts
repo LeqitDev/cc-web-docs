@@ -9,7 +9,7 @@ export async function fetch_doc_entries() {
         return;
     }
     
-    const response = await fetch('https://api.github.com/repos/LeqitDev/cc-web-docs/issues?labels=docs', {
+    const response = await fetch('https://api.github.com/repos/LeqitDev/cc-web-docs/issues?labels=docs&state=closed&creator=LeqitDev', {
         headers: {
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
