@@ -53,7 +53,7 @@
 		headings.forEach((h) => {
 			const rect = h.element.parentElement?.getBoundingClientRect();
 			if (rect) {
-				const top = rect.top - scrollY;
+				const top = rect.top;
 				if (top >= 0 && top < window.innerHeight || top < 0 && top + rect.height > 0) {
 					const height = top + rect.height > window.innerHeight ? window.innerHeight - top : rect.height;
 					intersecting = [...intersecting, { heading: h, top: top < 0 ? top / window.innerHeight : top, height }];
@@ -132,7 +132,7 @@
 		const el = document.getElementById(id);
 		if (el) {
 			const elementPosition = el.getBoundingClientRect().top;
-			const offsetPosition = elementPosition - window.innerHeight * 0.05;
+			const offsetPosition = elementPosition - window.innerHeight * 0.05 + window.scrollY;
 			window.scrollTo({
 				top: offsetPosition,
 				behavior: 'smooth'

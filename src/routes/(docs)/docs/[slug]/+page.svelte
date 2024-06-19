@@ -4,22 +4,24 @@
 	import { format, formatDistance } from 'date-fns';
 	import ToC from '$lib/components/ToC.svelte';
 	import { esbuildCompile } from '$lib/esbuild_compile';
+	import WidgetLoader from '$lib/components/WidgetLoader.svelte';
 
 	export let data: PageData;
 
-	let iFrameContainer: HTMLDivElement;
 	$: headings = [] as { id: string; text: string; level: number; element: Element }[];
 	let tags: string[] = [];
 
+	let widget: any;
+
 	onMount(async () => {
 		if (data.entry) {
-			createIFrame(await esbuildCompile(data.entry.body));
+			await esbuildCompile(data.entry.body, createIFrame);
 			tags = data.entry.frontmatter?.tags.split(',') ?? [];
 		}
 	});
 
-	function queryForEach(query: string, callback: (element: Element) => void) {
-		const elements = iFrameContainer.querySelectorAll(query);
+	function queryForEach(target: Element, query: string, callback: (element: Element) => void) {
+		const elements = target.querySelectorAll(query);
 		if (elements) {
 			elements.forEach(callback);
 		}
@@ -29,49 +31,39 @@
 		const myBlob = new Blob([iframeContent], { type: 'application/javascript' });
 		const myUrl = URL.createObjectURL(myBlob);
 
-		import(/* @vite-ignore */myUrl).then(({ default: Component }) => {
-			new Component({ target: iFrameContainer });
+		import(/* @vite-ignore */ myUrl).then((module) => {
+			widget = module.default;
+		});
+	}
 
-			queryForEach('h2, h3, h4, h5, h6', (heading) => {
+	function onComponentLoad(target: HTMLDivElement) {
+		if (headings.length === 0) {
+			queryForEach(target, 'h2, h3, h4, h5, h6', (heading) => {
 				const id = heading.id;
-				const text = new DOMParser().parseFromString(heading.innerHTML, 'text/html').body.textContent ?? '';
+				const text =
+					new DOMParser().parseFromString(heading.innerHTML, 'text/html').body.textContent ?? '';
 				const level = parseInt(heading.tagName[1]);
+				const t = heading.getBoundingClientRect().top;
 				headings = [...headings, { id, text, level, element: heading }];
 			});
+		}
 
-			queryForEach('section[data-heading-rank="2"]', (section) => {
-				section.classList.add('first:pt-2', 'pt-8');
-			});
-			
-			queryForEach('.custom-block', (block) => {
-				(block as HTMLElement).style.backgroundColor = '#2e3440ff';
-			});
-
-			queryForEach('.rehype-figure', (figure) => {
-				figure.classList.add('my-4');
-			});
-
-			queryForEach('.rehype-figure img', (img) => {
-				img.classList.add('mx-auto', 'rounded-md');
-			});
-
-			queryForEach('.rehype-figure figcaption', (caption) => {
-				caption.classList.add('text-center', 'text-surface-400', 'text-sm', 'italic', 'mt-1');
-			});
-
-			if (window.location.hash) {
-				const hash = window.location.hash.slice(1);
-				const target = document.getElementById(hash);
-				if (target) {
-					const elementPosition = target.getBoundingClientRect().top;
-					const offsetPosition = elementPosition - window.innerHeight * 0.05;
-					window.scrollTo({
-						top: offsetPosition,
-						behavior: 'smooth'
-					});
-				}
-			}
+		queryForEach(target, 'section[data-heading-rank="2"]', (section) => {
+			section.classList.add('first:pt-2', 'pt-8');
 		});
+
+		if (window.location.hash) {
+			const hash = window.location.hash.slice(1);
+			const target = document.getElementById(hash);
+			if (target) {
+				const elementPosition = target.getBoundingClientRect().top;
+				const offsetPosition = elementPosition - window.innerHeight * 0.05 + window.scrollY;
+				window.scrollTo({
+					top: offsetPosition,
+					behavior: 'smooth'
+				});
+			}
+		}
 	}
 
 	function parseDate(date: string, strict = false) {
@@ -102,11 +94,11 @@
 <div class="m-auto flex min-h-screen w-full flex-col lg:w-10/12 xl:w-7/12">
 	{#if data.entry}
 		<div class="flex grow">
-			<div
-				bind:this={iFrameContainer}
-				id="iframe-container"
-				class="grow overflow-hidden px-2 pb-20 md:pr-6 lg:p-0"
-			></div>
+			<div class="grow">
+				{#if widget}
+					<WidgetLoader this={widget} {onComponentLoad} />
+				{/if}
+			</div>
 			<div class="sticky top-4 hidden h-min w-64 p-2 md:block">
 				<ToC title={data.entry.title} bind:headings />
 				<h2 class="h5 mb-2 mt-8 border-b font-semibold">Tags</h2>
