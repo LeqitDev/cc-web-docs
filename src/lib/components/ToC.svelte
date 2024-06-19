@@ -6,7 +6,6 @@
 	type HeadingIntersecting = { target: Element; isIntersecting: boolean; intersectingRect: DOMRectReadOnly };
 
 	export let headings: Heading[];
-	export let target: HTMLIFrameElement;
 	export let title = 'Table of Contents';
 	let loaded = false;
 	$: tree = [] as HeadingTree[];
@@ -130,7 +129,7 @@
 	}
 
 	async function handleClick(id: string) {
-		const el = target.contentWindow?.document.getElementById(id);
+		const el = document.getElementById(id);
 		if (el) {
 			const elementPosition = el.getBoundingClientRect().top;
 			const offsetPosition = elementPosition - window.innerHeight * 0.05;

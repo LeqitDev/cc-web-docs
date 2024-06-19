@@ -14,6 +14,9 @@
 	);
 </script>
 
+<svelte:head>
+	<title>Docs | cc-web.cloud</title>
+</svelte:head>
 <div class="mx-auto w-full lg:w-10/12 xl:w-7/12 mt-12">
     <div class="grid gap-6">
 	{#if list}

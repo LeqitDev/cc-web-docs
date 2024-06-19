@@ -8,7 +8,6 @@
 	export let data: PageData;
 
 	let iFrameContainer: HTMLDivElement;
-	let iFrame: HTMLIFrameElement;
 	$: headings = [] as { id: string; text: string; level: number; element: Element }[];
 	let tags: string[] = [];
 
@@ -19,64 +18,50 @@
 		}
 	});
 
+	function queryForEach(query: string, callback: (element: Element) => void) {
+		const elements = iFrameContainer.querySelectorAll(query);
+		if (elements) {
+			elements.forEach(callback);
+		}
+	}
+
 	function createIFrame(iframeContent: string) {
-		iFrame = document.createElement('iframe');
-		iFrame.src = 'about:blank';
-		iFrame.width = '100%';
-		iFrame.height = '100%';
-		// iFrame.style.position = 'fixed';
-		iFrameContainer.innerHTML = ''; // (optional) Totally Clear it if needed
-		iFrameContainer.appendChild(iFrame);
-		
+		const myBlob = new Blob([iframeContent], { type: 'application/javascript' });
+		const myUrl = URL.createObjectURL(myBlob);
 
-		let iFrameDoc = iFrame.contentWindow && iFrame.contentWindow.document;
-		if (!iFrameDoc) {
-			console.log('iFrame security.');
-			return;
-		}
-		iFrameDoc.write(iframeContent);
+		import(/* @vite-ignore */myUrl).then(({ default: Component }) => {
+			new Component({ target: iFrameContainer });
 
-		// copy head styles
-		let head = document.querySelector('head');
-		if (head) {
-			let styles = [...head.querySelectorAll('style'), ...head.querySelectorAll('link[rel="stylesheet"]')];
-			styles.forEach((style) => {
-				iFrameDoc.head.appendChild(style.cloneNode(true));
+			queryForEach('h2, h3, h4, h5, h6', (heading) => {
+				const id = heading.id;
+				const text = new DOMParser().parseFromString(heading.innerHTML, 'text/html').body.textContent ?? '';
+				const level = parseInt(heading.tagName[1]);
+				headings = [...headings, { id, text, level, element: heading }];
 			});
-		}
 
-		iFrameDoc.close();
+			queryForEach('section[data-heading-rank="2"]', (section) => {
+				section.classList.add('first:pt-2', 'pt-8');
+			});
+			
+			queryForEach('.custom-block', (block) => {
+				(block as HTMLElement).style.backgroundColor = '#2e3440ff';
+			});
 
-		// set height to content height
-		iFrame.onload = () => {
-			iFrame.height = iFrame.contentWindow?.document.body.scrollHeight + 'px';
+			queryForEach('.rehype-figure', (figure) => {
+				figure.classList.add('my-4');
+			});
 
-			// table of contents/ headings crawler
-			const queryHeadings = iFrame.contentWindow?.document.querySelectorAll('h2, h3, h4, h5, h6');
-			// console.log(headings);
-			if (queryHeadings) {
-				queryHeadings.forEach((heading) => {
-					const id = heading.id;
-					const text = (new DOMParser()).parseFromString(heading.innerHTML, 'text/html').body.textContent ?? "";
-					const level = parseInt(heading.tagName[1]);
-					headings = [...headings, { id, text, level, element: heading}];
-				});
-				// console.log(headings);
-				
-			}
+			queryForEach('.rehype-figure img', (img) => {
+				img.classList.add('mx-auto', 'rounded-md');
+			});
 
-			// fix heading spacings
-			const queryHeadingSections = iFrame.contentWindow?.document.querySelectorAll('section[data-heading-rank="2"]');
-
-			if (queryHeadingSections) {
-				queryHeadingSections.forEach((section) => {
-					section.classList.add("first:pt-2", "pt-8");
-				});
-			}
+			queryForEach('.rehype-figure figcaption', (caption) => {
+				caption.classList.add('text-center', 'text-surface-400', 'text-sm', 'italic', 'mt-1');
+			});
 
 			if (window.location.hash) {
 				const hash = window.location.hash.slice(1);
-				const target = iFrame.contentWindow?.document.getElementById(hash);
+				const target = document.getElementById(hash);
 				if (target) {
 					const elementPosition = target.getBoundingClientRect().top;
 					const offsetPosition = elementPosition - window.innerHeight * 0.05;
@@ -86,9 +71,7 @@
 					});
 				}
 			}
-
-			iFrame.height = iFrame.contentWindow?.document.body.scrollHeight + 'px';
-		};
+		});
 	}
 
 	function parseDate(date: string, strict = false) {
@@ -110,21 +93,26 @@
 		}
 	}
 </script>
+
 <svelte:head>
 	{#if data.entry && data.entry.frontmatter}
-		<title>{data.entry.frontmatter.title ?? "Docs | cc-web"}</title>
+		<title>{data.entry.frontmatter.title ?? 'Docs | cc-web'}</title>
 	{/if}
 </svelte:head>
-<div class="min-h-screen w-full lg:w-10/12 xl:w-7/12 m-auto flex flex-col">
+<div class="m-auto flex min-h-screen w-full flex-col lg:w-10/12 xl:w-7/12">
 	{#if data.entry}
 		<div class="flex grow">
-			<div bind:this={iFrameContainer} id="iframe-container" class="overflow-hidden grow px-2 lg:p-0 md:pr-6 pb-20"></div>
-			<div class="w-64 h-min sticky top-4 p-2 md:block hidden">
-				<ToC title={data.entry.title} bind:headings={headings} target={iFrame} />
-				<h2 class="h5 font-semibold border-b mt-8 mb-2">Tags</h2>
+			<div
+				bind:this={iFrameContainer}
+				id="iframe-container"
+				class="grow overflow-hidden px-2 pb-20 md:pr-6 lg:p-0"
+			></div>
+			<div class="sticky top-4 hidden h-min w-64 p-2 md:block">
+				<ToC title={data.entry.title} bind:headings />
+				<h2 class="h5 mb-2 mt-8 border-b font-semibold">Tags</h2>
 				<div class="flex">
 					{#each tags as tag}
-						<a href={`/docs?tag=${tag}`} class="badge variant-filled-tertiary mr-2">{tag}</a>
+						<a href={`/docs?tag=${tag}`} class="variant-filled-tertiary badge mr-2">{tag}</a>
 					{/each}
 				</div>
 			</div>

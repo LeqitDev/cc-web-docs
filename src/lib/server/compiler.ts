@@ -118,10 +118,10 @@ export async function compileMDsveXAndSvelte(issue: App.Issue) {
 	issue.body = svelte_obj.js.code
 		// .replaceAll('svelte/internal', 'svelte/src/runtime/internal')
 		.replace('export { metadata };', '')
-		.replace(
+		/* .replace(
 			'export default Component;',
 			'const app = new Component({ target: document.querySelector("#render-app"), props: {metadata: metadata} });'
-		); // change some things to make it work
+		) */; // change some things to make it work
 	
 	return issue;
 }
