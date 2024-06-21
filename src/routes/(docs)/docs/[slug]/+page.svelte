@@ -91,7 +91,7 @@
 		<title>{data.entry.frontmatter.title ?? 'Docs | cc-web'}</title>
 	{/if}
 </svelte:head>
-<div class="m-auto flex min-h-screen w-full flex-col lg:w-10/12 xl:w-7/12">
+<div class="m-auto flex min-h-screen w-full flex-col lg:w-10/12 xl:w-9/12 2xl:w-7/12">
 	{#if data.entry}
 		<div class="flex grow">
 			<div class="grow">
@@ -104,7 +104,7 @@
 				<h2 class="h5 mb-2 mt-8 border-b font-semibold">Tags</h2>
 				<div class="flex">
 					{#each tags as tag}
-						<a href={`/docs?tag=${tag}`} class="variant-filled-tertiary badge mr-2">{tag}</a>
+						<a href={`/docs?tags=${tag}`} class="variant-filled-tertiary badge mr-2">{tag}</a>
 					{/each}
 				</div>
 			</div>

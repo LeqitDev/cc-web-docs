@@ -108,7 +108,6 @@ async function compile(vfs: { [key: string]: string }, code: string) {
 		bundle: true,
 		mainFields: ['svelte', 'browser', 'module', 'main'],
 		conditions: ['svelte', 'browser'],
-		external: ['@svelte/internal', 'svelte/internal', 'svelte'],
 		plugins: [
 			resolverPlugin(vfs), 
 			//sveltePlugin(), 
