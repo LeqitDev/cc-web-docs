@@ -1,5 +1,6 @@
 //import sveltePlugin from 'esbuild-svelte'; // causes reference error (buffer) change the module at line 36
 // import Admonition from '$lib/components/Admonition.svelte?raw';
+import { compile } from "svelte/compiler";
 import MyWorker from "./esbuild_compile.worker?worker";
 
 export const esbuildCompile = async (code: string, callback: (payload: string) => void) => {
@@ -16,6 +17,7 @@ export const esbuildCompile = async (code: string, callback: (payload: string) =
 
     const vfs: { [key: string]: string } = {
 		'main.js': code,
+		'DocsLayout.svelte': compile(`<slot />`, { filename: 'DocsLayout.svelte' }).js.code,
 	}; // virtual file system for esbuild
 
 	myWorker.postMessage({ command: "compile", payload: { vfs, code } });

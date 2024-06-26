@@ -22,7 +22,7 @@ const resolverPlugin = (vfs: { [key: string]: string }) => {
 
 			build.onResolve({ filter: /.*/ }, async (args) => {
 				if (args.path.includes("svelte/")) {
-					return { path: `https://unpkg.com/${args.path}/index.mjs`, namespace: 'unpkg' };
+					return { path: `https://unpkg.com/svelte/src/runtime/${args.path.slice(7)}/index.js`, namespace: 'unpkg' };
 				}
 
 				if (args.path === 'main.js') {
