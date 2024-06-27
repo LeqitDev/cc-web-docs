@@ -128,6 +128,13 @@
 		return new Promise(res => setTimeout(res, ms));
 	}
 
+	function bgFade(section: HTMLElement, time: number, opacity: number = 0.2) {
+		section.style.backgroundColor = `rgba(14, 165, 233, ${opacity})`;
+		if (opacity > 0) {
+			setTimeout(() => bgFade(section, time, opacity - (0.2 * 100 / time)), 100);
+		}
+	}
+
 	async function handleClick(id: string) {
 		const el = document.getElementById(id);
 		if (el) {
@@ -140,9 +147,11 @@
 
 			// TODO: make this a bit more elegant and change the ui
 			await scrollDelay(100);
-			el.parentElement!.style.outline = '2px solid #d41976';
+			const section = el.parentElement!;
+			const bg = section.style.backgroundColor;
+			bgFade(section, 1000);
 			await scrollDelay(1000);
-			el.parentElement!.style.outline = 'none';
+			section.style.backgroundColor = bg;
 		}
 	}
 </script>
@@ -157,7 +166,7 @@
 <div>
 	<div class="flex gap-2">
 		<a href="/" class="btn btn-sm rounded-md hover:variant-ghost-primary">Home</a>
-		<a href="/docs" class="btn btn-sm rounded-md hover:variant-ghost-primary">Docs</a>
+		<a href="/docs" class="btn btn-sm rounded-md hover:variant-ghost-primary bg-gradient-to-br variant-gradient-primary-secondary">Docs</a>
 		<a href="/blog" class="btn btn-sm rounded-md hover:variant-ghost-primary">Blog</a>
 	</div>
 	<h2 class="h3 font-bold border-b mb-2 mt-4">{title}</h2>
