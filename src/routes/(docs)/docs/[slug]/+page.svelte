@@ -3,7 +3,7 @@
 	import type { PageData } from './$types';
 	import { format, formatDistance } from 'date-fns';
 	import ToC from '$lib/components/ToC.svelte';
-	import { esbuildCompile } from '$lib/esbuild_compile';
+	import { esbuildCompile } from '$lib/esbuild/esbuild_compile';
 	import WidgetLoader from '$lib/components/WidgetLoader.svelte';
 
 	export let data: PageData;

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import * as esbuild from 'esbuild-wasm';
 import wasm from 'esbuild-wasm/esbuild.wasm?url';
+import { compile as svelteCompile } from 'svelte/compiler';
+import Admonition from '$lib/components/accessible/Admonition.svelte?raw';
 
 type MSG = { command: string; payload: { vfs: { [key: string]: string }, code: string } };
 
@@ -12,6 +14,27 @@ self.onmessage = function(e) {
 			self.postMessage({ command: 'compiled', payload: bundled });
 		});
 	}
+}
+
+async function addComponentsToVFS(vfs: { [key: string]: string }) {
+	const componentModules = import.meta.glob('../components/accessible/*.svelte', { query: '?url', import: 'default' });
+	const components = [];
+
+	for (const path in componentModules) {
+		const module = await (componentModules[path])() as string;
+		const name = path.split('/').pop();
+		console.log(name, module);
+		if (name) {
+			components.push({
+				name: name,
+				content: (await svelteCompile(module)).js.code,
+			});
+		}
+	}
+
+	components.forEach((component) => {
+		vfs[component.name] = component.content;
+	});
 }
 
 const resolverPlugin = (vfs: { [key: string]: string }) => {
@@ -95,6 +118,8 @@ async function init() {
 
 async function compile(vfs: { [key: string]: string }, code: string) {
 	await init();
+
+	await addComponentsToVFS(vfs);
 
 	return (await esbuild.build({
 		stdin: {

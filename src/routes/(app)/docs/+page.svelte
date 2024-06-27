@@ -8,6 +8,8 @@
 
 	const tagParams = $page.url.searchParams.get('tags')?.split(',');
 
+	console.log(data);
+
 	$: list = data.entries.filter(
 		(item) =>
 			!tagParams || item.frontmatter?.tags.split(',').some((tag: string) => tagParams.includes(tag))
