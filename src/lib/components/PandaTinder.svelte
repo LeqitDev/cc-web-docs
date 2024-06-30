@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { pb } from '$lib/clientStore';
 	import { onMount } from 'svelte';
 
 	type MyImage = { id: number; src: string; deg: number; left: number; opacity: number };
@@ -53,49 +54,30 @@
 	let max = 0;
 
 	onMount(async () => {
-		const response = await fetch('https://api.github.com/repos/LeqitDev/panda-img-cloud/contents', {
-			headers: {
-				Accept: 'application/vnd.github.object+json',
-				'X-GitHub-Api-Version': '2022-11-28',
-				Authorization: 'Bearer ' + import.meta.env.VITE_PANDA_GITHUB_TOKEN
-			}
-		});
-
-		let fetchedFiles = (await response.json()) as App.PandaPicture[];
-
-		fetchedFiles = fetchedFiles.filter((file) => file.name.endsWith('.webp'));
-        // TODO: await all return list 
-		fetchedFiles.forEach(async (file, i) => {
-			const resp = await fetch(file.url, {
-				headers: {
-					Accept: 'application/vnd.github.object+json',
-					'X-GitHub-Api-Version': '2022-11-28',
-					Authorization: 'Bearer ' + import.meta.env.VITE_PANDA_GITHUB_TOKEN
-				}
+		const response = (await pb
+			.collection('images')
+			.getFullList({ filter: "tags = 'panda'", sort: '@random' })) as { id: string; img: string }[];
+		let temp_list = [] as MyImage[];
+		response.forEach((img, i) => {
+			temp_list.push({
+				id: i,
+				src: pb.files.getUrl(img, img.img),
+				deg: Math.random() * 20 - 10,
+				left: 0,
+				opacity: 1
 			});
-
-			list = [
-				...list,
-				{
-					id: i,
-					src: 'data:image/png;base64,' + (await resp.json()).content,
-					deg: Math.random() * 20 - 10,
-					left: 0,
-					opacity: 1
-				}
-			];
-            max = list.length;
+			list = temp_list;
+			max = list.length - 1;
 		});
-        console.log(list);
 	});
 </script>
 
 <div class="relative mx-8 my-6 h-72 w-56 select-none">
-	{#each list.slice(Math.max(0, list.length - 6), list.length) as person}
+	{#each list.slice(Math.max(0, list.length - 5), list.length) as person}
 		<!-- svelte-ignore a11y-interactive-supports-focus -->
 		<div
-			class="shadow-card absolute flex h-72 w-56 select-none flex-col items-center rounded-md bg-secondary-100 px-2 pt-6"
-			style={`left: ${person.left}px; opacity: ${person.opacity}; rotate: ${person.deg}deg;`}
+			class="shadow-card absolute flex h-72 w-56 select-none flex-col items-center rounded-sm bg-secondary-100 px-2 pt-6"
+			style={`opacity: ${person.opacity}; transform: translateX(${person.left}px) rotate(${person.deg}deg);`}
 			on:mousedown={onMouseDown}
 			on:mouseup={onMouseUp}
 			on:mousemove={onMouseMove}
@@ -105,27 +87,37 @@
 				src={person.src}
 				style="max-height: 208px; display: block;"
 				alt="img"
-				class="select-none"
+				class="select-none rounded-sm w-48 h-48 object-cover"
 				on:dragstart|preventDefault={() => {}}
 			/>
 			{#if person.id === max}
-				<p
-					class="h4 mt-3 select-none bg-gradient-to-br from-secondary-600 to-surface-800 box-decoration-clone bg-clip-text font-caveat font-bold text-transparent"
-				>
-					Swipe right for more :)
-				</p>
+				<div class="h-100 grid grow items-center justify-center">
+					<p
+						class="h4 select-none bg-gradient-to-br from-secondary-600 to-surface-800 box-decoration-clone bg-clip-text font-caveat font-bold text-transparent"
+					>
+						Swipe right for more :)
+					</p>
+				</div>
 			{/if}
+		</div>
+	{:else}
+		<div
+			class="shadow-card absolute flex h-72 w-56 select-none flex-col items-center rounded-sm bg-secondary-100 px-2 pt-6"
+			role="button"
+		>
+			<div class="h-100 grow grid justify-center items-center">
+				<p
+					class="h4 select-none bg-gradient-to-br from-secondary-600 to-surface-800 box-decoration-clone bg-clip-text font-caveat font-bold text-transparent"
+				>
+					No more images :(
+				</p>
+			</div>
 		</div>
 	{/each}
 </div>
 
 <style>
 	.shadow-card {
-		box-shadow:
-			rgba(0, 0, 0, 0.25) 0px 54px 55px,
-			rgba(0, 0, 0, 0.12) 0px -12px 30px,
-			rgba(0, 0, 0, 0.12) 0px 4px 6px,
-			rgba(0, 0, 0, 0.17) 0px 12px 13px,
-			rgba(0, 0, 0, 0.09) 0px -3px 5px;
+		box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 	}
 </style>

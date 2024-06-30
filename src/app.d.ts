@@ -24,8 +24,6 @@ declare global {
 		}
 
 		interface PandaPicture {
-			download_url: string,
-			html_url: string,
 			url: string,
 			name: string,
 		}
